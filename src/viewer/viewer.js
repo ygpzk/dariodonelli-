@@ -36,14 +36,16 @@ export function setupViewer(root) {
   const stage = $('[data-viewer-stage]', root)
   const sheetEl = $('[data-viewer-sheet]', root)
   const thumb = $('[data-viewer-thumb]', root)
-  const items = $$('[data-viewer-go]', root)
-  if (!stage || !sheetEl || !thumb || !items.length) return () => {}
+  // Ogni tavola può avere più bottoni (la striscia sopra il piano e
+  // l'elenco sotto): si raggruppano per identificativo, il primo porta i dati.
+  const buttons = $$('[data-viewer-go]', root)
+  if (!stage || !sheetEl || !thumb || !buttons.length) return () => {}
+  const ids = [...new Set(buttons.map((b) => b.dataset.viewerGo))]
 
   const ac = new AbortController()
   const on = (target, type, fn, o = {}) => target.addEventListener(type, fn, { ...o, signal: ac.signal })
 
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const list = $('[data-viewer-list]', root)
   const status = $('[data-viewer-status]', root)
   const hint = $('[data-viewer-hint]', root)
   const live = $('[data-viewer-live]', root)
@@ -53,7 +55,11 @@ export function setupViewer(root) {
     note: $('[data-viewer-note]', root),
   }
 
-  const sheets = items.map((a, i) => ({ a, ...a.dataset, w: Number(a.dataset.w), h: Number(a.dataset.h), max: Number(a.dataset.max), pos: i + 1 }))
+  const sheets = ids.map((id, i) => {
+    const all = buttons.filter((b) => b.dataset.viewerGo === id)
+    const a = all[0]
+    return { a, all, ...a.dataset, w: Number(a.dataset.w), h: Number(a.dataset.h), max: Number(a.dataset.max), pos: i + 1 }
+  })
 
   // ── Stato ─────────────────────────────────────────────────────────────────
   // `view` è ciò che si vede, `target` dove si sta andando (coincidono durante
@@ -246,9 +252,10 @@ export function setupViewer(root) {
     layer.ready.then(() => mine === token && renderLayer())
   }
 
-  // l'elenco scorre fino alla tavola corrente senza muovere la pagina
-  const reveal = (a) =>
-    list &&
+  // l'elenco (o la striscia) scorre fino alla tavola corrente senza muovere la pagina
+  const reveal = (a) => {
+    const list = a.closest('[data-viewer-list], [data-viewer-strip]')
+    if (!list) return
     requestAnimationFrame(() => {
       const lr = list.getBoundingClientRect()
       const ar = a.getBoundingClientRect()
@@ -260,6 +267,7 @@ export function setupViewer(root) {
         list.scrollTo({ left: list.scrollLeft + ar.left - lr.left - lr.width / 2 + ar.width / 2, behavior })
       }
     })
+  }
 
   const show = (i, { say = true } = {}) => {
     i = (i + sheets.length) % sheets.length
@@ -274,14 +282,14 @@ export function setupViewer(root) {
     thumb.alt = s.alt
     loadLayer(s)
 
-    items.forEach((a, k) => (k === i ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')))
+    sheets.forEach((x, k) => x.all.forEach((a) => (k === i ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'))))
     if (el.meta) el.meta.replaceChildren(...s.meta.split('|').map((m) => Object.assign(document.createElement('span'), { textContent: m })))
     if (el.name) el.name.textContent = s.title
     if (el.note) el.note.textContent = s.note
 
     measure()
     reset()
-    reveal(s.a)
+    s.all.forEach(reveal)
     if (say) announce(`${s.title}`)
   }
 
@@ -473,9 +481,9 @@ export function setupViewer(root) {
   // del tasto destro sul piano è spento, così non offre «Salva immagine».
 
   on(stage, 'contextmenu', (e) => e.preventDefault())
-  items.forEach((a, i) =>
+  buttons.forEach((a) =>
     on(a, 'click', () => {
-      show(i)
+      show(ids.indexOf(a.dataset.viewerGo))
       if (innerWidth < 768) stage.scrollIntoView?.({ block: 'nearest', behavior: still ? 'auto' : 'smooth' })
     }),
   )

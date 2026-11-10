@@ -96,9 +96,13 @@ export function createPdfLayer(sheetEl, s, o = {}) {
     .then(async (p) => {
       if (!alive) return
       page = p
-      const [x0, y0, x1, y1] = p.view
+      // Le misure vengono dal viewport e non da p.view: il viewport tiene
+      // conto della rotazione della pagina (le stampe da CAD sono spesso
+      // salvate ruotate di 270°) e senza di essa il foglio uscirebbe
+      // schiacciato.
+      const v1 = p.getViewport({ scale: 1 })
       const w = Math.round(Math.min(BASE_PX * Math.min(dpr(), 2), 4096))
-      const h = Math.round((w * (y1 - y0)) / (x1 - x0))
+      const h = Math.round((w * v1.height) / v1.width)
       if (!(await paint(base, w, 0, 0, w, h))) return
       baseDone = true
       base.classList.add('is-in')

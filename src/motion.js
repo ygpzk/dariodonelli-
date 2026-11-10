@@ -62,7 +62,11 @@ export function scrollToTarget(target, { immediate = false } = {}) {
  * alla pagina quella linea non si raggiunge più: ciò che è sullo schermo
  * si mostra comunque, e non si perde nulla.
  */
-export function useReveal() {
+/**
+ * @param {string} [route] la pagina corrente: cambiando pagina il contenuto
+ *   è nuovo e l'osservatore riparte sui nuovi elementi .reveal
+ */
+export function useReveal(route) {
   useEffect(() => {
     const nodes = [...document.querySelectorAll('.reveal:not(.is-visible)')]
     if (!nodes.length) return
@@ -120,5 +124,5 @@ export function useReveal() {
       window.removeEventListener('scroll', onScroll)
       document.removeEventListener('focusin', onFocus)
     }
-  }, [])
+  }, [route])
 }

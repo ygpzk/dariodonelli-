@@ -7,6 +7,14 @@
  * o referenze non verificate.
  */
 
+/**
+ * Indirizzo pubblico del sito, senza barra finale: alimenta i tag di
+ * condivisione, i canonical e la sitemap generati dal prerender. Quando
+ * arriverà il dominio definitivo si cambia qui (e in index.html, che vale
+ * in sviluppo).
+ */
+export const siteUrl = 'https://dariodonelli.vercel.app'
+
 export const studio = {
   /* Sulla pagina il nome compare sempre in maiuscolo, come sulla targa:
      lo fa il CSS (text-transform), così etichette, alt e lettori di
@@ -72,14 +80,11 @@ export const profile = {
  */
 export const sections = [
   { id: 'servizi', num: '01', label: 'Servizi' },
-  { id: 'ambiti', num: '02', label: 'Ambiti' },
+  { id: 'lavori', num: '02', label: 'Lavori' },
   { id: 'studio', num: '03', label: 'Lo Studio' },
   { id: 'metodo', num: '04', label: 'Metodo' },
   { id: 'contatti', num: '05', label: 'Contatti' },
 ]
-
-/** Manifesto dell'intro: tre righe, nessuna di più. */
-export const manifesto = ['Progettare.', 'Verificare.', 'Seguire il cantiere.']
 
 /**
  * Riga informativa sotto la testata. L'anno è quello corrente: la riga
@@ -88,29 +93,16 @@ export const manifesto = ['Progettare.', 'Verificare.', 'Seguire il cantiere.']
 export const infoline = ['Rivalta sul Mincio', 'MN', String(new Date().getFullYear()), 'Ordine Ingegneri n. 1495']
 
 /**
- * Tre dati verificabili sotto l'intro: quelli che qualificano il
- * professionista a colpo d'occhio, presi dall'iscrizione all'albo.
- */
-export const heroFacts = [
-  { label: 'Ordine degli Ingegneri', value: 'Mantova, n. 1495' },
-  { label: 'Iscritto all’albo', value: 'dal 2010' },
-  { label: 'Laurea', value: 'Ingegneria Edile-Architettura' },
-]
-
-/**
  * Tre macro-aree. Ognuna spiega cosa comprende, a chi serve e che problema
  * risolve, con un elenco delle prestazioni effettivamente offerte.
- * width/height sono le misure reali dei file: il browser riserva il
- * riquadro giusto e la pagina non salta quando le foto arrivano.
+ * L'immagine è un file dell'archivio dei lavori (src/lavori.js): il lavoro
+ * e la voce (una fotografia o una pagina di tavola) che la rappresenta.
  */
 export const serviceAreas = [
   {
     id: 'progettazione',
     num: '01',
-    image: '/images/servizio-progettazione',
-    width: 900,
-    height: 506,
-    imageAlt: 'Un tecnico disegna a mano un prospetto su carta da lucido',
+    cover: { work: 'casa-parolini', item: 'rendering' },
     title: 'Progettazione e pratiche edilizie',
     text: 'Dalla prima verifica di fattibilità fino al progetto esecutivo e alle autorizzazioni. Utile a chi deve costruire, ampliare o ristrutturare e ha bisogno di capire in anticipo cosa è possibile fare, con quali costi e con quali tempi.',
     items: [
@@ -124,10 +116,7 @@ export const serviceAreas = [
   {
     id: 'strutture',
     num: '02',
-    image: '/images/servizio-strutture',
-    width: 900,
-    height: 596,
-    imageAlt: 'Armature di ferro predisposte su un solaio prima del getto',
+    cover: { work: 'vasca-salizzole', item: '22122010151' },
     title: 'Strutture e sicurezza sismica',
     text: 'Verifica e adeguamento di edifici esistenti, progettazione strutturale di nuove opere. Risponde a chi possiede un immobile datato e vuole sapere come si comporta in caso di sisma, o deve intervenire su un edificio vincolato.',
     items: [
@@ -140,10 +129,7 @@ export const serviceAreas = [
   {
     id: 'cantiere',
     num: '03',
-    image: '/images/servizio-cantiere',
-    width: 900,
-    height: 600,
-    imageAlt: 'Squadra di tecnici in cantiere sul solaio di un edificio in costruzione',
+    cover: { work: 'passerella-volta-mantovana', item: 'img-20200312-133215' },
     title: 'Direzione lavori e consulenza',
     text: 'Presidio del cantiere e verifica di quanto viene realizzato rispetto al progetto. Serve a chi vuole un riferimento tecnico unico che segua l’intervento, controlli le lavorazioni e gestisca il rapporto con le imprese.',
     items: [
@@ -173,7 +159,8 @@ export const serviceIndex = [
 
 /**
  * Ambiti di intervento: l'elenco indicato dallo studio nel documento di
- * revisione, nell'ordine in cui è stato consegnato.
+ * revisione, nell'ordine in cui è stato consegnato. Compare in testa
+ * all'archivio dei lavori.
  */
 export const ambiti = [
   'Nuove costruzioni',
@@ -183,104 +170,6 @@ export const ambiti = [
   'Opere industriali',
   'Ristrutturazione edilizia',
   'Restauro e risanamento conservativo',
-]
-
-/**
- * Esempi di intervento. Le immagini sono fotografie di repertorio, servite
- * dal sito stesso (jpg + webp) e non da un CDN esterno: il sito non dipende
- * da un servizio terzo e le foto non cambiano sotto i piedi.
- */
-export const projects = [
-  {
-    id: 'residenze',
-    category: 'Residenziale',
-    title: 'Residenze private',
-    location: 'Rivalta sul Mincio (MN)',
-    year: '2025',
-    image: '/images/progetto-residenze',
-    width: 1600,
-    height: 1067,
-    imageAlt: 'Villa unifamiliare con ampie vetrate, vista dal giardino al tramonto',
-    text: 'Supporto completo a privati per trasformazioni, ristrutturazioni e nuove realizzazioni, con attenzione alla funzionalità degli spazi, alla qualità dei materiali e alla corretta definizione delle opere in fase di cantiere.',
-  },
-  {
-    id: 'pubblici',
-    category: 'Opere civili',
-    title: 'Interventi pubblici e civili',
-    location: 'Provincia di Mantova',
-    year: '2024',
-    image: '/images/progetto-pubblici',
-    width: 1600,
-    height: 1067,
-    imageAlt: 'Squadra di tecnici sul solaio di un edificio in costruzione',
-    text: 'Coordinamento tecnico e progettuale per opere civili e pubbliche: verifiche di fattibilità, sicurezza, contenimento dei costi e gestione delle diverse fasi di realizzazione.',
-  },
-  {
-    id: 'riqualificazione',
-    category: 'Riqualificazione',
-    title: 'Riqualificazione e adeguamento strutturale',
-    location: 'Mantova e territorio',
-    year: '2023',
-    image: '/images/progetto-riqualificazione',
-    width: 1600,
-    height: 1600,
-    imageAlt: 'Facciata intonacata di bianco di un edificio ristrutturato',
-    text: 'Interventi di recupero, miglioramento sismico e restauro di edifici esistenti, per valorizzare il patrimonio costruito e migliorarne prestazioni, comfort e sicurezza.',
-  },
-]
-
-/**
- * Elaborati da consultare nel visualizzatore (src/viewer/). ESEMPI: due
- * file di prova che mostrano come il sito apre un DWG e un PDF così come
- * escono da AutoCAD o dalla stampa, senza conversioni. Vanno sostituiti
- * con gli elaborati veri dello studio.
- *
- * I file stanno in public/tavole/: il file originale, la miniatura
- * <nome>.webp (1200 px, fa da anteprima mentre il file si apre) e
- * <nome>-mini.webp (320 px, per l'elenco).
- * - DWG (AutoCAD 2010–2018): `dwg` è il file, `box` il riquadro dello
- *   spazio modello da mostrare (x0, y0, x1, y1 in unità del disegno);
- *   l'altezza della tavola si ricava dal riquadro. `darken` scurisce i
- *   colori chiari pensati per lo sfondo nero di AutoCAD; `paper` dà la
- *   larghezza del foglio, da cui gli spessori di linea.
- * - PDF: `src` è il file, `page` la pagina (dalla prima); `width` e
- *   `height` seguono le proporzioni della pagina.
- */
-const sheetFiles = (name) => ({
-  thumb: `/tavole/${name}.webp`,
-  mini: `/tavole/${name}-mini.webp`,
-})
-
-const exampleBox = [1634445, 4998992, 1638894, 5000944]
-
-export const sheets = [
-  {
-    id: 'esempio-disegno',
-    tag: 'Esempio',
-    title: 'Estratto di mappa con frazionamento',
-    alt: 'Esempio di disegno DWG: estratto di mappa catastale con le linee di frazionamento e le superfici dei lotti',
-    note: 'File DWG di AutoCAD aperto così com’è: linee, testi, tratteggi e layer vengono letti dal file originale e ridisegnati nitidi a ogni ingrandimento.',
-    dwg: '/tavole/esempio-disegno.dwg',
-    src: '/tavole/esempio-disegno.dwg',
-    box: exampleBox,
-    paper: 'A3',
-    width: 1200,
-    height: Math.round((1200 * (exampleBox[3] - exampleBox[1])) / (exampleBox[2] - exampleBox[0])),
-    ...sheetFiles('esempio-disegno'),
-  },
-  {
-    id: 'esempio-documento',
-    tag: 'Esempio',
-    title: 'Documento PDF di una pagina',
-    alt: 'Esempio di documento PDF: una tabella oraria su foglio A4',
-    note: 'PDF originale mostrato nella pagina, senza aprire altri programmi: si ingrandisce fino al dettaglio.',
-    src: '/tavole/esempio-documento.pdf',
-    page: 1,
-    paper: 'A4',
-    width: 1200,
-    height: 1697,
-    ...sheetFiles('esempio-documento'),
-  },
 ]
 
 /** Le quattro fasi del metodo di lavoro. */

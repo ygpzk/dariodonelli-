@@ -25,3 +25,9 @@ dist-ssr
 
 # Ambiente Python locale (usato solo per gli script di verifica)
 .venv
+
+# Materiali con i nomi dei committenti privati: restano sul computer, non nel
+# repository (che è pubblico). Servono solo insieme all'archivio dello studio.
+originali/*.docx
+scripts/lavori-sources.json
+scripts/lavori-fixes.json

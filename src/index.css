@@ -52,6 +52,29 @@
     U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* Inter Tight: il carattere dei titoli, stretto e pesante. Variabile,
+   pesi 400–800, stessi sottoinsiemi degli altri. */
+@font-face {
+  font-family: 'Inter Tight';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('/fonts/intertight-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter Tight';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('/fonts/intertight-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+
 :root {
   /* Colori: nessun accento cromatico, solo carta e inchiostro. */
   --paper: #faf9f6;
@@ -64,8 +87,15 @@
   --line: #e3dfd7;
   --line-strong: #c9c4ba;
 
+  /* Tre voci: il display stretto e pesante per i titoli, il serif leggero
+     per gli attacchi e le righe d'accento, il sans per il testo. */
+  --font-display: 'Inter Tight', 'Inter', system-ui, sans-serif;
   --font-serif: 'Fraunces', 'Times New Roman', serif;
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Curve dei movimenti: una sola uscita morbida per tutto il sito. */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-clip: cubic-bezier(0.77, 0, 0.18, 1);
 
   /* Ritmo verticale delle sezioni. */
   --space-section: clamp(5.5rem, 11vw, 9.5rem);
@@ -86,6 +116,9 @@ html {
 
 body {
   margin: 0;
+  /* gli elementi a tutta larghezza (la striscia del visualizzatore) non
+     devono creare uno scorrimento orizzontale */
+  overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans);
@@ -193,4 +226,139 @@ button {
 
 .skip-link:focus {
   transform: none;
+}
+
+/* --- Movimento ------------------------------------------------------------
+   Titoli che salgono parola per parola da sotto una maschera, immagini che si
+   scoprono dal basso, pagine che entrano con un leggero scorrimento. Con il
+   movimento ridotto, o senza JavaScript, tutto è semplicemente visibile. */
+
+.split {
+  display: inline;
+}
+
+.split .w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* spazio per le discendenti, che la maschera non deve tagliare */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.split .w__in {
+  display: inline-block;
+  transform: translateY(0);
+}
+
+html.js .split .w__in {
+  animation: rise 0.8s var(--ease-out) both;
+  animation-delay: calc(var(--w, 0) * 45ms);
+  animation-play-state: paused;
+}
+
+html.js .split--now .w__in,
+html.js .is-visible .split .w__in {
+  animation-play-state: running;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* immagini che si scoprono: dal basso, con un lieve rientro dello zoom */
+html.js .media-reveal {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1s var(--ease-clip);
+}
+
+html.js .media-reveal img {
+  transform: scale(1.08);
+  transition: transform 1.5s var(--ease-out);
+}
+
+html.js .is-visible .media-reveal,
+html.js .media-reveal.is-visible,
+html.js .media-reveal--now {
+  clip-path: inset(0);
+}
+
+html.js .is-visible .media-reveal img,
+html.js .media-reveal.is-visible img,
+html.js .media-reveal--now img {
+  transform: none;
+}
+
+html.js .media-reveal--now {
+  animation: unclip 1s var(--ease-clip) both;
+}
+
+html.js .media-reveal--now img {
+  animation: unscale 1.5s var(--ease-out) both;
+}
+
+@keyframes unclip {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes unscale {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* l'ingresso di una pagina */
+html.js .site-main > * {
+  animation: page-in 0.7s var(--ease-out) both;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .split .w__in,
+  html.js .media-reveal,
+  html.js .media-reveal img,
+  html.js .media-reveal--now,
+  html.js .media-reveal--now img,
+  html.js .site-main > * {
+    animation: none;
+    transition: none;
+    transform: none;
+    clip-path: none;
+    opacity: 1;
+  }
+}
+
+/* la sottolineatura che scorre via e torna: per tutti i collegamenti testuali */
+.u-line {
+  padding-bottom: 2px;
+  background: linear-gradient(currentColor, currentColor) left bottom / 100% 1px no-repeat;
+  transition: background-size 0.4s var(--ease-out);
+}
+
+.u-line:hover {
+  background-position: right bottom;
+  background-size: 0 1px;
 }

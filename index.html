@@ -15,7 +15,7 @@
     <title>Ing. Dario Donelli | Studio tecnico a Rivalta sul Mincio (MN)</title>
     <meta
       name="description"
-      content="Studio tecnico dell'Ing. Dario Donelli a Rivalta sul Mincio (Mantova): progettazione architettonica e strutturale, sicurezza sismica, riqualificazione energetica e direzione lavori."
+      content="Studio tecnico dell'Ing. Dario Donelli a Rivalta sul Mincio (Mantova): progettazione architettonica e strutturale, sicurezza sismica, riqualificazione energetica e direzione lavori. Archivio dei lavori dal 2010."
     />
 
     <meta name="theme-color" content="#faf9f6" />
@@ -23,7 +23,10 @@
 
     <!-- Anteprima nelle condivisioni. Gli URL devono essere assoluti:
          gli scraper di WhatsApp e simili ignorano i percorsi relativi.
-         Quando arriverà il dominio definitivo, aggiornare qui. -->
+         Quando arriverà il dominio definitivo, aggiornare qui e in
+         `siteUrl` (src/content.js). In produzione il prerender
+         (plugins/prerender.js) riscrive titolo, descrizione e questi tag
+         per ogni pagina: le schede dei lavori hanno i propri. -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="it_IT" />
     <meta property="og:title" content="Ing. Dario Donelli | Studio tecnico" />
@@ -39,6 +42,7 @@
          sottoinsiemi latin, quelli usati in pratica da tutta la pagina. -->
     <link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/intertight-latin.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <div id="root"></div>

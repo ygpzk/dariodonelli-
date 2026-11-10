@@ -608,6 +608,8 @@ function ServicesSection() {
 function Archive() {
   const [filter, setFilter] = useState('all')
   const list = filter === 'all' ? lavori : lavori.filter((w) => w.category === filter)
+  // quanti lavori per categoria, come nell'elenco dello studio («Strutture (11)»)
+  const countOf = (id) => lavori.filter((w) => w.category === id).length
 
   /* Cambiando filtro le righe della nuova lista sono elementi nuovi, che
      l'osservatore della rivelazione (motion.js) non conosce: resterebbero
@@ -629,7 +631,9 @@ function Archive() {
       <dl className="categories reveal">
         {categories.map((c) => (
           <div className="categories__item" key={c.id}>
-            <dt className="categories__label">{c.label}</dt>
+            <dt className="categories__label">
+              {c.label} <span className="categories__n">{countOf(c.id)}</span>
+            </dt>
             <dd>{c.text}</dd>
           </div>
         ))}
@@ -647,11 +651,11 @@ function Archive() {
       {/* Il filtro: bottoni per semantica, collegamenti testuali per aspetto. */}
       <div className="archive__filter reveal" role="group" aria-label="Filtra per categoria">
         <button type="button" className="filter-link" aria-pressed={filter === 'all'} onClick={() => setFilter('all')}>
-          Tutti
+          Tutti <span className="filter-link__n">{lavori.length}</span>
         </button>
         {categories.map((c) => (
           <button type="button" key={c.id} className="filter-link" aria-pressed={filter === c.id} onClick={() => setFilter(c.id)}>
-            {c.label}
+            {c.label} <span className="filter-link__n">{countOf(c.id)}</span>
           </button>
         ))}
       </div>

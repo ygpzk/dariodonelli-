@@ -142,7 +142,7 @@ export default function SheetViewer({ sheets, label = 'Visualizzatore delle tavo
       {/* La striscia e il piano escono dalla colonna del testo e vanno da
           margine a margine; sotto, i dati e l'elenco tornano in colonna. */}
       <div className="viewer__bleed">
-        <nav className="viewer__strip" aria-label="Tutte le tavole e le fotografie" data-viewer-strip>
+        <nav className="viewer__strip" aria-label="Tutte le tavole e le fotografie" data-viewer-strip data-lenis-prevent>
           <ol role="list">
             {sheets.map((sheet, i) => (
               <Chip key={sheet.id} sheet={sheet} index={i} total={total} />

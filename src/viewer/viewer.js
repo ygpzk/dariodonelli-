@@ -488,6 +488,24 @@ export function setupViewer(root) {
     }),
   )
 
+  // Sopra la striscia la rotella la fa scorrere di lato, come la timeline di
+  // un programma di montaggio, e la pagina resta ferma. Va bene sia la rotella
+  // verticale sia lo scorrimento orizzontale del trackpad.
+  const strip = $('[data-viewer-strip]', root)
+  if (strip) {
+    on(
+      strip,
+      'wheel',
+      (e) => {
+        if (e.ctrlKey) return // il pizzico del trackpad resta al browser
+        e.preventDefault()
+        const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
+        strip.scrollLeft += e.deltaMode === 1 ? d * 32 : e.deltaMode === 2 ? d * strip.clientWidth : d
+      },
+      { passive: false },
+    )
+  }
+
   // ── Avvio ─────────────────────────────────────────────────────────────────
 
   root.classList.add('is-ready')

@@ -253,6 +253,10 @@
   line-height: 1.2;
 }
 
+.viewer__note:empty {
+  display: none;
+}
+
 .viewer__note {
   margin-top: 0.5rem;
   max-width: 38rem;

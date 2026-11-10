@@ -193,7 +193,9 @@ export default function SheetViewer({ sheets, label = 'Visualizzatore delle tavo
           </p>
         </div>
 
-        <nav className="viewer__list" aria-label="Elenco delle tavole" data-viewer-list>
+        {/* data-lenis-prevent: sopra l'elenco la rotella scorre l'elenco, non la
+            pagina (lo scorrimento morbido di motion.js lo lascia stare) */}
+        <nav className="viewer__list" aria-label="Elenco delle tavole" data-viewer-list data-lenis-prevent>
           <ol role="list">
             {sheets.map((sheet, i) => (
               <Item key={sheet.id} sheet={sheet} index={i} total={total} />

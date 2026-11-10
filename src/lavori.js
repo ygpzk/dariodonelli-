@@ -1001,7 +1001,8 @@ function build(work) {
   const items = [...pages, ...photos].map((it) => ({
     ...it,
     alt: `${work.title}: ${it.title}`,
-    note: it.kind === 'pdf' ? `Tavola PDF, formato ${it.paper}. I dati personali del cartiglio sono oscurati.` : it.title,
+    // Per le foto la didascalia è già il titolo: niente nota, non la si ripete.
+    note: it.kind === 'pdf' ? `Tavola PDF, formato ${it.paper}. I dati personali del cartiglio sono oscurati.` : '',
   }))
 
   const coverId = work.cover || photos[0]?.id || pages[0]?.id
